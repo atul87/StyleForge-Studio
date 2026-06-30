@@ -1,0 +1,31 @@
+# Ignore macOS system files
+.DS_Store
+**/.DS_Store
+
+# Ignore Python bytecode directories
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Model weights (large binary files)
+*.pth
+*.onnx
+*.onnx.data
+
+# Uploaded files
+static/uploads/
+NST_Code/static/uploads/
+
+# Log files
+*.log
+
+# Local lib directory (vendored packages)
+lib/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Environment
+.env
+venv/

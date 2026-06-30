@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StyleForge Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2317212f'/%3E%3Cpath d='M18 42 32 14l14 28H18Z' fill='%23b88715'/%3E%3Ccircle cx='32' cy='42' r='9' fill='%23126c6a'/%3E%3C/svg%3E">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0f172a;
+        color: #e2e8f0;
+        background-image: 
+            linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95)),
+            url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1974&auto=format&fit=crop');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        min-height: 100vh;
+    }
+    .header-section {
+        padding: 5rem 0 3rem;
+        text-align: center;
+        position: relative;
+    }
+    .header-section h1 {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        font-size: 3.5rem;
+        background: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px rgba(192, 132, 252, 0.3);
+        margin-bottom: 1rem;
+    }
+    .header-section .lead {
+        font-size: 1.25rem;
+        color: #94a3b8;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: rgba(129, 140, 248, 0.3);
+    }
+    .card-header {
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #f8fafc;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+    .preview-image {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        object-fit: contain;
+        background-color: #0f172a;
+        border: 2px dashed #334155;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 1.2rem;
+        overflow: hidden;
+    }
+    .preview-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .preview-image.dragover {
+        border-color: #a855f7;
+        background-color: rgba(168, 85, 247, 0.1);
+        color: #c084fc;
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        border: none;
+        padding: 15px 50px;
+        font-size: 1.2rem;
+        font-family: 'Orbitron', sans-serif;
+        border-radius: 50px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 10px 20px -10px rgba(168, 85, 247, 0.5);
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+        box-shadow: 0 20px 30px -10px rgba(168, 85, 247, 0.6);
+    }
+    .btn-glow {
+        animation: glowing 2s infinite;
+    }
+    @keyframes glowing {
+        0% { box-shadow: 0 0 5px #a855f7; }
+        50% { box-shadow: 0 0 20px #a855f7, 0 0 10px #6366f1; }
+        100% { box-shadow: 0 0 5px #a855f7; }
+    }
+    /* Custom Range Slider */
+    .range-wrap {
+        position: relative;
+        margin: 2rem auto;
+        width: 100%;
+        max-width: 90%;
+    }
+    
+    #alphaRange {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 12px;
+        background: rgba(30, 41, 59, 0.8);
+        border-radius: 15px;
+        outline: none;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        transition: background 0.1s;
+    }
+    
+    #alphaRange::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        background: transparent;
+    }
+    
+    #alphaRange::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        background: #fff;
+        cursor: pointer;
+        margin-top: -6px;
+        box-shadow: 0 0 10px #c084fc, 0 0 20px #818cf8;
+        border: 3px solid #1e293b;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    #alphaRange::-webkit-slider-thumb:hover {
+        box-shadow: 0 0 15px #c084fc, 0 0 30px #818cf8;
+    }
+
+    .range-value {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.85rem;
+        box-shadow: 0 5px 15px rgba(168, 85, 247, 0.4);
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+    }
+    .range-value::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px 5px 0;
+        border-style: solid;
+        border-color: #a855f7 transparent transparent transparent;
+    }
+    .range-wrap:hover .range-value {
+        opacity: 1;
+    }
+    .form-control {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        color: #f8fafc;
+    }
+    .form-control:focus {
+        background-color: #1e293b;
+        border-color: #818cf8;
+        color: #f8fafc;
+        box-shadow: 0 0 0 0.25rem rgba(129, 140, 248, 0.25);
+    }
+    .form-control::file-selector-button {
+        background-color: #334155;
+        color: #f8fafc;
+        border: none;
+        padding: 0.375rem 0.75rem;
+        margin-right: 0.75rem;
+        border-radius: 0.25rem;
+        transition: background-color 0.2s;
+    }
+    .form-control::file-selector-button:hover {
+        background-color: #475569;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #0f172a; 
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #334155; 
+        border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #818cf8; 
+    }
+
+    /* Ambient Orbs */
+    .orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(100px);
+        z-index: 0;
+        opacity: 0.4;
+        animation: floatOrb 15s infinite ease-in-out alternate;
+        pointer-events: none;
+    }
+    .orb-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, #4f46e5, transparent 70%); }
+    .orb-2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, #c084fc, transparent 70%); animation-delay: -5s; }
+    .orb-3 { top: 40%; left: 40%; width: 300px; height: 300px; background: radial-gradient(circle, #f472b6, transparent 70%); animation-delay: -10s; opacity: 0.2; }
+
+    @keyframes floatOrb {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(50px, 50px) scale(1.1); }
+    }
+
+    /* Scanline Effect */
+    .scanlines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+        background-size: 100% 4px;
+        z-index: 9998;
+        pointer-events: none;
+        opacity: 0.6;
+    }    
+
+    /* Background Canvas */
+    #neuralCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .header-section, .container, .footer-section {
+        position: relative;
+        z-index: 1;
+    }    
+
+    /* Animations */
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Loader */
+    .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .loader-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+    .cyber-spinner {
+        width: 80px;
+        height: 80px;
+        border: 4px solid transparent;
+        border-top: 4px solid #818cf8;
+        border-right: 4px solid #c084fc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        box-shadow: 0 0 15px rgba(129, 140, 248, 0.5);
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .navbar-brand {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        background: linear-gradient(to right, #818cf8, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .nav-link {
+        color: #e2e8f0 !important;
+        font-weight: 500;
+        margin-left: 1rem;
+        transition: color 0.3s;
+        position: relative;
+    }
+    .nav-link:hover {
+        color: #818cf8 !important;
+    }
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #818cf8;
+        transition: width 0.3s;
+    }
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    /* Footer Styles */
+    .footer-section {
+        background: rgba(15, 23, 42, 0.95);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 4rem 0 2rem;
+        margin-top: 5rem;
+        color: #94a3b8;
+    }
+    .footer-section h5 {
+        color: #f8fafc;
+        font-family: 'Orbitron', sans-serif;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+    .footer-link {
+        color: #94a3b8;
+        text-decoration: none;
+        transition: color 0.3s;
+        display: block;
+        margin-bottom: 0.8rem;
+    }
+    .footer-link:hover {
+        color: #818cf8;
+    }
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+        color: #f8fafc;
+        margin-right: 10px;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+    .social-icon:hover {
+        background: #818cf8;
+        color: white;
+    }
+    .examples-section {
+        margin-top: 4rem;
+    }
+    .examples-section .example-image {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(15, 23, 42, 0.8);
+    }
+    .examples-section .example-role {
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #cbd5e1;
+        margin-bottom: 0.45rem;
+        text-transform: uppercase;
+    }
+    .examples-section .tree-connector {
+        color: #a5b4fc;
+        font-size: 1.15rem;
+        font-weight: 600;
+        text-align: center;
+        letter-spacing: 0.04em;
+        margin: 0.2rem 0 0.4rem;
+    }
+    .examples-section .example-flow {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.25rem;
+        border-radius: 18px;
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .examples-section .example-inputs {
+        flex: 1;
+        display: grid;
+        gap: 1rem;
+    }
+    .examples-section .example-output {
+        flex: 1;
+    }
+    .examples-section .example-arrow {
+        color: #a5b4fc;
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+    @media (max-width: 767.98px) {
+        .examples-section .example-flow {
+            flex-direction: column;
+        }
+        .examples-section .example-arrow {
+            transform: rotate(90deg);
+        }
+    }
+    .faq-section {
+        margin-top: 4rem;
+    }
+    .faq-section .accordion-item {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 0.75rem;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .faq-section .accordion-button {
+        background: rgba(15, 23, 42, 0.75);
+        color: #e2e8f0;
+        font-weight: 600;
+    }
+    .faq-section .accordion-button:not(.collapsed) {
+        background: rgba(129, 140, 248, 0.2);
+        color: #f8fafc;
+        box-shadow: none;
+    }
+    .faq-section .accordion-button:focus {
+        box-shadow: 0 0 0 0.2rem rgba(129, 140, 248, 0.2);
+    }
+    .preset-section-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.1rem;
+        color: #a855f7;
+        margin-top: 1.5rem;
+        margin-bottom: 0.8rem;
+        letter-spacing: 1px;
+    }
+    .preset-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 12px;
+        margin-bottom: 2rem;
+    }
+    .preset-card {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        aspect-ratio: 1;
+    }
+    .preset-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(168, 85, 247, 0.4);
+        box-shadow: 0 8px 16px -8px rgba(168, 85, 247, 0.5);
+    }
+    .preset-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .preset-card:hover img {
+        transform: scale(1.08);
+    }
+    .preset-card .preset-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(4px);
+        color: #f8fafc;
+        font-size: 0.72rem;
+        font-weight: 500;
+        text-align: center;
+        padding: 4px 2px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .preset-card.active-preset {
+        border-color: #818cf8;
+        box-shadow: 0 0 12px rgba(129, 140, 248, 0.6);
+    }
+    .preset-card.active-preset::after {
+        content: '\f058'; /* FontAwesome check-circle */
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        color: #818cf8;
+        font-size: 1.1rem;
+        text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    }
+    
+    /* Custom Toggle Switch Styles */
+    .form-check-input:checked {
+        background-color: #a855f7 !important;
+        border-color: #c084fc !important;
+    }
+    .form-check-input:focus {
+        border-color: #c084fc;
+        box-shadow: 0 0 0 0.25rem rgba(168, 85, 247, 0.25);
+    }
+    .bg-indigo {
+        background-color: #818cf8 !important;
+    }
+    .text-indigo {
+        color: #818cf8 !important;
+    }
+    .mode-active {
+        color: #818cf8 !important;
+        font-weight: 600;
+        text-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+    }
+    .preset-card .preset-sub-label {
+        font-size: 0.58rem;
+        color: #94a3b8;
+        display: block;
+        font-weight: 300;
+        text-transform: capitalize;
+        margin-top: 1px;
+    }
+
+    /* Before/After Comparison Slider */
+    .comparison-container {
+        position: relative;
+        width: 100%;
+        height: 512px;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #0b0f19;
+        user-select: none;
+    }
+    .comparison-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: left top;
+    }
+    .comparison-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        border-right: 2px solid #818cf8;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    }
+    .comparison-overlay .comparison-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        object-fit: contain;
+    }
+    .comparison-handle {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 4px;
+        height: 100%;
+        background-color: #818cf8;
+        cursor: ew-resize;
+        z-index: 10;
+        transform: translateX(-50%);
+    }
+    .comparison-handle-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        border-radius: 50%;
+        border: 3px solid #f8fafc;
+        color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 10px rgba(129, 140, 248, 0.8);
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
+    .comparison-label {
+        position: absolute;
+        bottom: 12px;
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(4px);
+        color: #f8fafc;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 5;
+        pointer-events: none;
+    }
+    .comparison-label-before {
+        left: 12px;
+    }
+    .comparison-label-after {
+        right: 12px;
+    }
+
+    /* Performance Stats Dashboard */
+    .stats-dashboard {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+    @media (max-width: 767.98px) {
+        .stats-dashboard {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    .stat-card {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+    }
+    .stat-label {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+        font-family: 'Orbitron', sans-serif;
+    }
+    .stat-value {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #f8fafc;
+    }
+
+    /* Clear Buttons on Card Previews */
+    .preview-clear-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 32px;
+        height: 32px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #94a3b8;
+        border-radius: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.2s ease;
+    }
+    .preview-clear-btn:hover {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.15);
+        border-color: rgba(239, 68, 68, 0.3);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+        transform: scale(1.05);
+    }
+</style>
+<style>
+    :root {
+        --paper: #f6f1e8;
+        --panel: #fffaf2;
+        --panel-strong: #ffffff;
+        --ink: #17212f;
+        --muted: #687586;
+        --line: #ded5c7;
+        --teal: #126c6a;
+        --teal-dark: #0d4f4d;
+        --coral: #d9654a;
+        --gold: #b88715;
+        --night: #17212f;
+        --shadow: 0 18px 45px rgba(23, 33, 47, 0.12);
+    }
+
+    * {
+        letter-spacing: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 88px;
+    }
+
+    body {
+        padding-top: 76px;
+        background:
+            linear-gradient(135deg, rgba(246, 241, 232, 0.98), rgba(236, 241, 236, 0.94)),
+            radial-gradient(circle at 8% 12%, rgba(217, 101, 74, 0.14), transparent 30%),
+            radial-gradient(circle at 92% 8%, rgba(18, 108, 106, 0.12), transparent 28%),
+            var(--paper) !important;
+        color: var(--ink) !important;
+        font-family: 'Inter', sans-serif;
+        background-attachment: fixed;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.28;
+        background-image:
+            linear-gradient(rgba(23, 33, 47, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(23, 33, 47, 0.05) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(to bottom, black, transparent 88%);
+    }
+
+    #neuralCanvas {
+        opacity: 0.08;
+        mix-blend-mode: multiply;
+    }
+
+    .scanlines,
+    .orb {
+        display: none !important;
+    }
+
+    .navbar {
+        background: rgba(255, 250, 242, 0.88) !important;
+        border-bottom: 1px solid rgba(23, 33, 47, 0.1) !important;
+        box-shadow: 0 12px 28px rgba(23, 33, 47, 0.08);
+    }
+
+    .navbar-brand {
+        color: var(--ink) !important;
+        -webkit-text-fill-color: currentColor !important;
+        background: none !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 1rem !important;
+        font-weight: 800 !important;
+    }
+
+    .navbar-brand i,
+    .footer-section i {
+        color: var(--teal);
+    }
+
+    .navbar-toggler {
+        border-color: rgba(23, 33, 47, 0.2);
+        background: var(--night);
+    }
+
+    .nav-link {
+        color: var(--muted) !important;
+        font-weight: 700;
+        margin-left: 0.5rem;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus {
+        color: var(--teal) !important;
+    }
+
+    .nav-link::after {
+        background-color: var(--teal);
+    }
+
+    .header-section {
+        padding: 2.5rem 0 1.25rem !important;
+        text-align: left !important;
+    }
+
+    .header-section .container {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.65fr);
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .header-section .container::after {
+        content: '';
+        display: block;
+        min-height: 220px;
+        border-radius: 8px;
+        border: 1px solid rgba(23, 33, 47, 0.14);
+        box-shadow: var(--shadow);
+        background:
+            linear-gradient(to bottom, rgba(23, 33, 47, 0.02), rgba(23, 33, 47, 0.22)),
+            url("{{ url_for('send_example', filename='stylized_brad_pitt.jpg') }}");
+        background-size: cover;
+        background-position: center;
+    }
+
+    .header-section h1 {
+        max-width: 760px;
+        margin-bottom: 0.75rem !important;
+        color: var(--ink) !important;
+        -webkit-text-fill-color: currentColor !important;
+        background: none !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: clamp(2.1rem, 6vw, 4.9rem) !important;
+        line-height: 0.98;
+        font-weight: 900 !important;
+        text-shadow: none !important;
+    }
+
+    .header-section .lead {
+        max-width: 620px !important;
+        margin: 0 !important;
+        color: var(--muted) !important;
+        border-right: 0 !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        width: auto !important;
+        animation: none !important;
+        display: block !important;
+        text-align: left !important;
+        font-size: 1.08rem !important;
+        line-height: 1.65;
+    }
+
+    .card {
+        background: rgba(255, 250, 242, 0.92) !important;
+        color: var(--ink);
+        border: 1px solid rgba(23, 33, 47, 0.1) !important;
+        border-radius: 8px !important;
+        box-shadow: var(--shadow) !important;
+        backdrop-filter: blur(14px);
+    }
+
+    .card:hover {
+        border-color: rgba(18, 108, 106, 0.28) !important;
+        box-shadow: 0 22px 50px rgba(23, 33, 47, 0.14) !important;
+    }
+
+    .card-header {
+        background: rgba(23, 33, 47, 0.04) !important;
+        color: var(--ink) !important;
+        border-bottom: 1px solid rgba(23, 33, 47, 0.09) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 800;
+        text-transform: none !important;
+        font-size: 0.95rem !important;
+    }
+
+    .preview-image {
+        height: clamp(220px, 31vw, 340px) !important;
+        background: #f2eadf !important;
+        border: 1.5px dashed rgba(23, 33, 47, 0.24) !important;
+        border-radius: 8px !important;
+        color: var(--muted) !important;
+        font-size: 1rem !important;
+    }
+
+    .preview-image.dragover {
+        border-color: var(--teal) !important;
+        background-color: rgba(18, 108, 106, 0.08) !important;
+        color: var(--teal) !important;
+        box-shadow: inset 0 0 0 1px rgba(18, 108, 106, 0.12) !important;
+    }
+
+    .form-control {
+        background: var(--panel-strong) !important;
+        border: 1px solid var(--line) !important;
+        color: var(--ink) !important;
+        border-radius: 8px !important;
+    }
+
+    .form-control:focus {
+        border-color: var(--teal) !important;
+        box-shadow: 0 0 0 0.2rem rgba(18, 108, 106, 0.14) !important;
+    }
+
+    .form-control::file-selector-button {
+        background: var(--night) !important;
+        color: #fffaf2 !important;
+        border-radius: 6px !important;
+    }
+
+    .btn-primary {
+        background: var(--teal) !important;
+        border: 1px solid var(--teal-dark) !important;
+        color: #fffaf2 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 12px 24px rgba(18, 108, 106, 0.22) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 1rem !important;
+        font-weight: 800;
+        letter-spacing: 0 !important;
+        padding: 0.9rem 1.35rem !important;
+        text-transform: none !important;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background: var(--teal-dark) !important;
+        transform: translateY(-1px);
+    }
+
+    .btn-glow {
+        animation: none !important;
+    }
+
+    .preset-section-title,
+    .form-label {
+        color: var(--teal) !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 800;
+        letter-spacing: 0 !important;
+    }
+
+    .preset-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 0.75rem !important;
+    }
+
+    .preset-card {
+        background: var(--panel-strong) !important;
+        border: 1px solid rgba(23, 33, 47, 0.12) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 24px rgba(23, 33, 47, 0.08);
+    }
+
+    .preset-card:hover {
+        border-color: rgba(18, 108, 106, 0.35) !important;
+        box-shadow: 0 14px 28px rgba(18, 108, 106, 0.16) !important;
+    }
+
+    .preset-card .preset-label {
+        background: rgba(23, 33, 47, 0.82) !important;
+        font-size: 0.72rem;
+    }
+
+    .preset-card.active-preset {
+        border-color: var(--teal) !important;
+        box-shadow: 0 0 0 3px rgba(18, 108, 106, 0.18), 0 14px 28px rgba(18, 108, 106, 0.16) !important;
+    }
+
+    .preset-card.active-preset::after {
+        color: var(--gold) !important;
+    }
+
+    .range-wrap {
+        max-width: 100% !important;
+        margin: 2.25rem auto 1.25rem !important;
+    }
+
+    #alphaRange {
+        background: rgba(23, 33, 47, 0.12);
+        border-color: rgba(23, 33, 47, 0.1);
+        box-shadow: none;
+    }
+
+    #alphaRange::-webkit-slider-thumb {
+        background: var(--teal);
+        border-color: var(--panel-strong);
+        box-shadow: 0 8px 16px rgba(18, 108, 106, 0.25);
+    }
+
+    .range-value {
+        background: var(--night) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 22px rgba(23, 33, 47, 0.16) !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    .range-value::after {
+        border-color: var(--night) transparent transparent transparent !important;
+    }
+
+    .mode-active {
+        color: var(--teal) !important;
+        font-weight: 800;
+        text-shadow: none !important;
+    }
+
+    .execution-toggle {
+        background: var(--panel-strong) !important;
+        border-color: var(--line) !important;
+        border-radius: 8px !important;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--teal) !important;
+        border-color: var(--teal) !important;
+    }
+
+    .bg-indigo {
+        background-color: var(--teal) !important;
+    }
+
+    .text-indigo {
+        color: var(--teal) !important;
+    }
+
+    .comparison-container {
+        height: min(512px, 62vw) !important;
+        min-height: 280px;
+        background: #efe6d8 !important;
+        border-color: rgba(23, 33, 47, 0.12) !important;
+        border-radius: 8px !important;
+    }
+
+    .card-header.text-white {
+        color: #fffaf2 !important;
+    }
+
+    .comparison-overlay {
+        border-right-color: var(--gold) !important;
+    }
+
+    .comparison-handle {
+        background-color: var(--gold) !important;
+    }
+
+    .comparison-handle-button {
+        background: var(--night) !important;
+        border-color: #fffaf2 !important;
+        box-shadow: 0 10px 24px rgba(23, 33, 47, 0.28) !important;
+    }
+
+    .comparison-label {
+        background: rgba(23, 33, 47, 0.82) !important;
+        border-radius: 6px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 800;
+    }
+
+    .stats-dashboard {
+        border-top: 1px solid rgba(23, 33, 47, 0.1);
+        padding-top: 1rem;
+    }
+
+    .stat-card {
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0.75rem !important;
+    }
+
+    .stat-card + .stat-card {
+        border-left: 1px solid rgba(23, 33, 47, 0.1) !important;
+    }
+
+    .stat-label {
+        color: var(--muted) !important;
+        font-family: 'Inter', sans-serif !important;
+        letter-spacing: 0 !important;
+    }
+
+    .stat-value {
+        color: var(--ink) !important;
+    }
+
+    .examples-section,
+    .faq-section {
+        margin-top: 3rem !important;
+    }
+
+    .examples-section .example-flow {
+        background: rgba(255, 255, 255, 0.56) !important;
+        border: 1px solid rgba(23, 33, 47, 0.09) !important;
+        border-radius: 8px !important;
+    }
+
+    .examples-section .example-image {
+        height: clamp(160px, 24vw, 220px) !important;
+        background: #f2eadf !important;
+        border-radius: 8px !important;
+        border-color: rgba(23, 33, 47, 0.12) !important;
+    }
+
+    .examples-section .example-role,
+    .accordion-body,
+    .text-muted {
+        color: var(--muted) !important;
+    }
+
+    .examples-section .example-arrow {
+        color: var(--coral) !important;
+    }
+
+    .faq-section .accordion-item {
+        background: var(--panel-strong) !important;
+        border-color: rgba(23, 33, 47, 0.1) !important;
+        border-radius: 8px !important;
+    }
+
+    .faq-section .accordion-button {
+        background: var(--panel-strong) !important;
+        color: var(--ink) !important;
+    }
+
+    .faq-section .accordion-button:not(.collapsed) {
+        background: rgba(18, 108, 106, 0.08) !important;
+        color: var(--teal-dark) !important;
+    }
+
+    .footer-section {
+        background: var(--night) !important;
+        color: #cbd5df !important;
+        margin-top: 4rem !important;
+        padding: 3rem 0 2rem !important;
+    }
+
+    .footer-section h5 {
+        color: #fffaf2 !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 800;
+    }
+
+    .footer-link,
+    .footer-section .text-muted,
+    .footer-section p {
+        color: #cbd5df !important;
+    }
+
+    .footer-link:hover {
+        color: #fffaf2 !important;
+    }
+
+    .social-icon {
+        background: rgba(255, 250, 242, 0.08) !important;
+        border-radius: 8px !important;
+    }
+
+    .social-icon:hover {
+        background: var(--teal) !important;
+    }
+
+    .loader-overlay {
+        background: rgba(23, 33, 47, 0.86) !important;
+    }
+
+    .cyber-spinner {
+        border-top-color: var(--gold) !important;
+        border-right-color: var(--teal) !important;
+        box-shadow: none !important;
+    }
+
+    .preview-clear-btn {
+        border-radius: 8px !important;
+        background: rgba(23, 33, 47, 0.82) !important;
+        color: #fffaf2 !important;
+    }
+
+    #errorAlert {
+        background: rgba(217, 101, 74, 0.14) !important;
+        border-color: rgba(217, 101, 74, 0.45) !important;
+        color: #8f2f21 !important;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 991.98px) {
+        .header-section .container {
+            grid-template-columns: 1fr;
+        }
+
+        .header-section .container::after {
+            display: none;
+        }
+
+        .navbar-collapse {
+            padding-top: 0.75rem;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        body {
+            padding-top: 66px;
+        }
+
+        .header-section {
+            padding-top: 1.5rem !important;
+        }
+
+        .header-section h1 {
+            font-size: clamp(2rem, 12vw, 3.2rem) !important;
+        }
+
+        .preset-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .stats-dashboard {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        .stat-card + .stat-card {
+            border-left: 0 !important;
+        }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="neuralCanvas"></canvas>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#studio"><i class="fas fa-layer-group me-2"></i>StyleForge Studio</a>
+        <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#studio">Studio</a></li>
+                <li class="nav-item"><a class="nav-link" href="#examples">Examples</a></li>
+                <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="header-section">
+    <div class="container">
+        <div>
+            <h1 class="display-4 fw-bold">Style transfer, tuned like a studio.</h1>
+            <p class="lead">Blend a content image with a reference artwork, compare the result, and export a finished stylized image from one focused workspace.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5 fade-in-up" id="studio">
+    <!-- Place dynamic error alert here -->
+    <div class="alert alert-danger mt-4 text-center {% if not error %}d-none{% endif %}" id="errorAlert" role="alert" style="background: rgba(220, 38, 38, 0.2); border-color: #dc2626; color: #fecaca;">
+        <strong>Error:</strong> <span id="errorMsg">{{ error }}</span>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
+        {{ form.hidden_tag() }}
+        <!-- Presets Hidden Inputs -->
+        <input type="hidden" name="content_preset" id="contentPresetInput" value="">
+        <input type="hidden" name="style_preset" id="stylePresetInput" value="">
+        
+        <div class="row g-4">
+            <!-- Content Image Section -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header text-center py-3"><i class="fas fa-image me-2"></i>Content source</div>
+                    <div class="card-body text-center">
+                        <div class="preview-image mb-3" id="contentPreview">
+                            <button type="button" class="preview-clear-btn" id="contentClearBtn" title="Clear image" aria-label="Clear content image"><i class="fas fa-times"></i></button>
+                            {% if content_image %}
+                                <img src="{{ url_for('send_image', filename=content_image) }}" alt="Content Image">
+                            {% else %}
+                                <span>Select or drop a content image</span>
+                            {% endif %}
+                        </div>
+                        {{ form.content(class="form-control", onchange="previewFile(this, 'contentPreview')") }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Style Image Section -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header text-center py-3"><i class="fas fa-palette me-2"></i>Style reference</div>
+                    <div class="card-body text-center">
+                        <div class="preview-image mb-3" id="stylePreview">
+                            <button type="button" class="preview-clear-btn" id="styleClearBtn" title="Clear image" aria-label="Clear style image"><i class="fas fa-times"></i></button>
+                            {% if style_image %}
+                                <img src="{{ url_for('send_image', filename=style_image) }}" alt="Style Image">
+                            {% else %}
+                                <span>Select or drop a style image</span>
+                            {% endif %}
+                        </div>
+                        {{ form.style(class="form-control", onchange="previewFile(this, 'stylePreview')") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preset Gallery Section -->
+        <div class="row mt-4">
+            <!-- Content Presets -->
+            <div class="col-md-6">
+                <div class="preset-section-title text-center"><i class="fas fa-image me-2"></i>Content presets</div>
+                <div class="preset-grid" id="contentPresetGrid">
+                    <div class="preset-card" data-preset="brad_pitt.jpg">
+                        <img src="{{ url_for('send_example', filename='brad_pitt.jpg') }}" alt="Brad Pitt">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">Brad Pitt</span>
+                            <span class="preset-sub-label">Portrait photography</span>
+                        </div>
+                    </div>
+                    <div class="preset-card" data-preset="golden_gate.jpg">
+                        <img src="{{ url_for('send_example', filename='golden_gate.jpg') }}" alt="Golden Gate">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">Golden Gate</span>
+                            <span class="preset-sub-label">Landscape photo</span>
+                        </div>
+                    </div>
+                    <div class="preset-card" data-preset="newyork.jpg">
+                        <img src="{{ url_for('send_example', filename='newyork.jpg') }}" alt="New York">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">New York</span>
+                            <span class="preset-sub-label">Urban cityscape</span>
+                        </div>
+                    </div>
+                    <div class="preset-card" data-preset="flowers.jpg">
+                        <img src="{{ url_for('send_example', filename='flowers.jpg') }}" alt="Flowers">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">Flowers</span>
+                            <span class="preset-sub-label">Nature macro</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Style Presets -->
+            <div class="col-md-6">
+                <div class="preset-section-title text-center"><i class="fas fa-palette me-2"></i>Style presets</div>
+                <div class="preset-grid" id="stylePresetGrid">
+                    <div class="preset-card" data-preset="sketch.png">
+                        <img src="{{ url_for('send_example', filename='sketch.png') }}" alt="Pencil Sketch">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">Sketch</span>
+                            <span class="preset-sub-label">Pencil Sketch</span>
+                        </div>
+                    </div>
+                    <div class="preset-card" data-preset="picasso_seated_nude_hr.jpg">
+                        <img src="{{ url_for('send_example', filename='picasso_seated_nude_hr.jpg') }}" alt="Picasso">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">Picasso</span>
+                            <span class="preset-sub-label">Cubist Oil</span>
+                        </div>
+                    </div>
+                    <div class="preset-card" data-preset="la_muse.jpg">
+                        <img src="{{ url_for('send_example', filename='la_muse.jpg') }}" alt="La Muse">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">La Muse</span>
+                            <span class="preset-sub-label">Metzinger Art</span>
+                        </div>
+                    </div>
+                    <div class="preset-card" data-preset="mondrian_cropped.jpg">
+                        <img src="{{ url_for('send_example', filename='mondrian_cropped.jpg') }}" alt="Mondrian">
+                        <div class="preset-label">
+                            <span class="d-block fw-bold">Mondrian</span>
+                            <span class="preset-sub-label">Neoplasticism</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-8">
+                <div class="range-wrap">
+                    <label for="alphaRange" class="form-label fw-bold mb-3 d-block text-center">Style strength</label>
+                    <div class="position-relative">
+                        <div class="range-value" id="rangeValue">1.0</div>
+                        {{ form.alpha(class="form-control-range", id="alphaRange", type="range", min="0", max="1", step="0.1") }}
+                    </div>
+                </div>
+
+                <!-- Execution Mode Toggle -->
+                <div class="row justify-content-center mt-5 mb-4">
+                    <div class="col text-center">
+                        <label class="form-label fw-bold mb-3 d-block">Execution mode</label>
+                        <div class="execution-toggle d-inline-flex align-items-center justify-content-center p-2 border shadow-sm">
+                            <span class="px-3 py-1 mode-active" id="modeServerLabel" style="font-size: 0.9rem; cursor: pointer; transition: all 0.3s;">PyTorch</span>
+                            <div class="form-check form-switch m-0 px-2 d-flex align-items-center">
+                                <input class="form-check-input" type="checkbox" role="switch" id="modeToggle" style="width: 3em; height: 1.5em; cursor: pointer; background-color: #334155; border-color: #475569;">
+                            </div>
+                            <span class="px-3 py-1 text-muted" id="modeClientLabel" style="font-size: 0.9rem; cursor: pointer; transition: all 0.3s;">Browser ONNX</span>
+                        </div>
+                        <!-- ONNX Loading Progress -->
+                        <div class="mt-4 d-none mx-auto" id="onnxLoadingProgress" style="max-width: 400px;">
+                            <div class="text-sm text-muted mb-2"><i class="fas fa-spinner fa-spin me-2 text-indigo"></i>Loading browser neural network... <span id="onnxProgressPct">0%</span></div>
+                            <div class="progress" style="height: 6px; background-color: #1e293b; border-radius: 3px; overflow: hidden;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-indigo" id="onnxProgressBar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary shadow-lg btn-glow">
+                        <i class="fas fa-wand-magic-sparkles me-2"></i>Create stylized image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Always output the result section block but keep it hidden unless we have a result -->
+    <div class="row justify-content-center mt-5 {% if not result_image %}d-none{% endif %}" id="resultSection">
+        <div class="col-md-9">
+            <div class="card border-success">
+                <div class="card-header text-white fw-bold text-center py-3" style="background: var(--night); font-family: 'Inter', sans-serif;">Stylized output</div>
+                <div class="card-body p-3">
+                    
+                    <!-- Dynamic Image Comparison Slider -->
+                    <div class="comparison-container" id="compSlider">
+                        <!-- Before (Content Image) -->
+                        <img id="compBeforeImage" src="" class="comparison-image" alt="Original Content">
+                        <span class="comparison-label comparison-label-before">Before (Original)</span>
+                        
+                        <!-- After (Stylized Result) -->
+                        <div class="comparison-overlay" id="compOverlay">
+                            <img id="resultImage" src="{% if result_image %}{{ url_for('send_image', filename=result_image) }}{% endif %}" class="comparison-image" alt="Stylized Result">
+                            <span class="comparison-label comparison-label-after">After (Stylized)</span>
+                        </div>
+                        
+                        <!-- Slider dividing handle -->
+                        <div class="comparison-handle" id="compHandle">
+                            <div class="comparison-handle-button">
+                                <i class="fas fa-arrows-alt-h"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Stats Dashboard -->
+                    <div class="stats-dashboard">
+                        <div class="stat-card">
+                            <div class="stat-label">Execution Mode</div>
+                            <div class="stat-value text-indigo" id="statMode">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Resolution</div>
+                            <div class="stat-value" id="statResolution">512 x 512</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Style Strength</div>
+                            <div class="stat-value" id="statAlpha">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Inference Latency</div>
+                            <div class="stat-value text-success" id="statLatency">-</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-footer text-center" style="background: transparent; border-top: none; padding-bottom: 20px;">
+                    <a id="downloadBtn" href="{% if result_image %}{{ url_for('send_image', filename=result_image) }}{% endif %}" download class="btn btn-primary px-5">
+                        <i class="fas fa-download me-2"></i>Download image
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="container examples-section fade-in-up" id="examples">
+    <div class="card">
+        <div class="card-header text-center py-3"><i class="fas fa-table-cells-large me-2"></i>Example pairings</div>
+        <div class="card-body">
+            <p class="text-center text-muted mb-4">Curated content and style combinations with their generated outputs.</p>
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="example-flow" style="cursor: pointer;" data-content-preset="brad_pitt.jpg" data-style-preset="sketch.png">
+                        <div class="example-inputs">
+                            <div>
+                                <div class="example-role text-center">Content Image</div>
+                                <img src="{{ url_for('send_example', filename='brad_pitt.jpg') }}" alt="Brad Pitt Content" class="example-image">
+                            </div>
+                            <div>
+                                <div class="example-role text-center">Style Image</div>
+                                <img src="{{ url_for('send_example', filename='sketch.png') }}" alt="Sketch Style" class="example-image">
+                            </div>
+                        </div>
+                        <div class="example-arrow">-&gt;</div>
+                        <div class="example-output">
+                            <div class="example-role text-center">Output</div>
+                            <img src="{{ url_for('send_example', filename='stylized_brad_pitt.jpg') }}" alt="Brad Pitt Sketch Result" class="example-image">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="example-flow" style="cursor: pointer;" data-content-preset="brad_pitt.jpg" data-style-preset="picasso_seated_nude_hr.jpg">
+                        <div class="example-inputs">
+                            <div>
+                                <div class="example-role text-center">Content Image</div>
+                                <img src="{{ url_for('send_example', filename='brad_pitt.jpg') }}" alt="Brad Pitt Content" class="example-image">
+                            </div>
+                            <div>
+                                <div class="example-role text-center">Style Image</div>
+                                <img src="{{ url_for('send_example', filename='picasso_seated_nude_hr.jpg') }}" alt="Picasso Seated Nude Style" class="example-image">
+                            </div>
+                        </div>
+                        <div class="example-arrow">-&gt;</div>
+                        <div class="example-output">
+                            <div class="example-role text-center">Output</div>
+                            <img src="{{ url_for('send_example', filename='stylized_brad_pitt (1).jpg') }}" alt="Brad Pitt Picasso Result" class="example-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container faq-section fade-in-up" id="faq">
+    <div class="card">
+        <div class="card-header text-center py-3"><i class="fas fa-circle-question me-2"></i>FAQ</div>
+        <div class="card-body">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="false" aria-controls="faqOne">
+                            1. Is it a pretrained model?
+                        </button>
+                    </h2>
+                    <div id="faqOne" class="accordion-collapse collapse" aria-labelledby="faqHeadingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            No, we train a model ourselves.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">
+                            2. Is it a free platform?
+                        </button>
+                    </h2>
+                    <div id="faqTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            This demo is currently available as a free experience.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">
+                            3. Which styles of painting can be used?
+                        </button>
+                    </h2>
+                    <div id="faqThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            You can use almost any painting style image (impressionist, abstract, cubist, watercolor, sketch, and more) as the style reference.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFour" aria-expanded="false" aria-controls="faqFour">
+                            4. Tech stack of the project?
+                        </button>
+                    </h2>
+                    <div id="faqFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Python, PyTorch, Flask.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFive" aria-expanded="false" aria-controls="faqFive">
+                            5. Which dataset / how big data?
+                        </button>
+                    </h2>
+                    <div id="faqFive" class="accordion-collapse collapse" aria-labelledby="faqHeadingFive" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            The model is trained on large-scale image datasets.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <h5><i class="fas fa-layer-group me-2"></i>StyleForge Studio</h5>
+                <p class="mb-4">A Flask and PyTorch image style transfer workspace built around quick experimentation and clean exports.</p>
+                <p class="small text-muted">Upload your own content and style references or start from the included presets.</p>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5>Quick Links</h5>
+                <a href="#studio" class="footer-link">Studio</a>
+                <a href="#examples" class="footer-link">Examples</a>
+                <a href="#faq" class="footer-link">FAQ</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Model</h5>
+                <p class="mb-2"><i class="fas fa-server me-2"></i> PyTorch server inference</p>
+                <p class="mb-2"><i class="fas fa-window-maximize me-2"></i> Optional browser ONNX inference</p>
+                <p class="mb-2"><i class="fas fa-sliders me-2"></i> Adjustable style strength</p>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Output</h5>
+                <div class="d-flex mb-3">
+                    <span class="social-icon"><i class="fas fa-code-compare"></i></span>
+                    <span class="social-icon"><i class="fas fa-gauge-high"></i></span>
+                    <span class="social-icon"><i class="fas fa-download"></i></span>
+                </div>
+                <p class="small text-muted">Compare before and after images, review latency, and download the final render.</p>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+        <div class="text-center text-muted small">
+            StyleForge Studio - Neural style transfer demo
+        </div>
+    </div>
+</footer>
+
+<!-- Loading Overlay -->
+<div class="loader-overlay" id="loader">
+    <div class="cyber-spinner mb-4"></div>
+    <h3 class="text-white" style="font-family: 'Inter', sans-serif; font-weight: 800;">Rendering</h3>
+    <p class="text-muted">Generating the stylized image.</p>
+</div>
+
+<style>
+    @media (max-width: 991.98px) {
+        .header-section .container::after {
+            content: none !important;
+            display: none !important;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.3/dist/ort.min.js"></script>
+<script>
+    function previewFile(input, previewId) {
+        const preview = document.getElementById(previewId);
+        const file = input.files[0];
+        const reader = new FileReader();
+        const type = previewId === 'contentPreview' ? 'content' : 'style';
+
+        reader.addEventListener("load", function () {
+            // Remove old images
+            const imgs = preview.querySelectorAll('img');
+            imgs.forEach(i => i.remove());
+            // Remove span placeholder
+            const span = preview.querySelector('span');
+            if (span) span.remove();
+            
+            // Add new image preview
+            const img = document.createElement('img');
+            img.src = reader.result;
+            img.alt = "Image Preview";
+            preview.appendChild(img);
+            
+            // Show clear button
+            const clearBtn = document.getElementById(`${type}ClearBtn`);
+            if (clearBtn) clearBtn.style.display = 'flex';
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Restore previews if page reloads with data (optional enhancement)
+    window.onload = function() {
+        const initialResultSection = document.getElementById('resultSection');
+        const initialResultImage = document.getElementById('resultImage');
+        if (
+            initialResultSection &&
+            !initialResultSection.classList.contains('d-none') &&
+            initialResultImage &&
+            initialResultImage.getAttribute('src')
+        ) {
+            initialResultSection.scrollIntoView({behavior: "smooth"});
+        }
+        // Neural Network Background Animation
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 3 + 1.5;
+                // Assign one of 10 colors to group nodes
+                this.hue = Math.floor(Math.random() * 10) * 36;
+                this.density = (Math.random() * 30) + 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Mouse interaction
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        const directionX = forceDirectionX * force * this.density;
+                        const directionY = forceDirectionY * force * this.density;
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
+                }
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+                this.hue = (this.hue + 0.2) % 360;
+            }
+            draw() {
+                ctx.fillStyle = `hsla(${this.hue}, 70%, 60%, 0.3)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const numParticles = Math.floor(window.innerWidth / 15);
+            for (let i = 0; i < numParticles; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach((p, i) => {
+                p.update();
+                p.draw();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const d = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (d < 100) {
+                        ctx.strokeStyle = `hsla(${p.hue}, 70%, 60%, ${0.15 * (1 - d/100)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => { resize(); initParticles(); });
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        });        
+        resize();
+        initParticles();
+        animate();
+        // Range Slider Logic
+        const range = document.getElementById('alphaRange');
+        const rangeValue = document.getElementById('rangeValue');
+
+        function updateRange() {
+            const val = range.value;
+            const min = range.min || 0;
+            const max = range.max || 1;
+            const percentage = ((val - min) * 100) / (max - min);
+            
+            rangeValue.textContent = val;
+            // Adjust position of the bubble to follow the thumb
+            const thumbWidth = 24;
+            const offset = thumbWidth/2 - (percentage * thumbWidth / 100);
+            rangeValue.style.left = `calc(${percentage}% + ${offset}px)`;
+            
+            // Update gradient background
+            range.style.background = `linear-gradient(to right, #126c6a 0%, #b88715 ${percentage}%, rgba(23, 33, 47, 0.12) ${percentage}%, rgba(23, 33, 47, 0.12) 100%)`;
+        }
+
+        if(range) {
+            range.addEventListener('input', updateRange);
+            updateRange(); // Init
+        }
+
+        // Drag and drop logic
+        const contentPreview = document.getElementById('contentPreview');
+        const stylePreview = document.getElementById('stylePreview');
+        const contentInput = document.getElementById('content');
+        const styleInput = document.getElementById('style');
+
+        function setupDragAndDrop(previewZone, fileInput) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                previewZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    previewZone.classList.add('dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                previewZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    previewZone.classList.remove('dragover');
+                }, false);
+            });
+
+            previewZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    previewFile(fileInput, previewZone.id);
+                }
+            }, false);
+
+            // Make clicking the preview zone open file dialogue
+            previewZone.style.cursor = 'pointer';
+            previewZone.addEventListener('click', (e) => {
+                // Prevent dialog from opening if user clicked the clear button
+                if (e.target.closest('.preview-clear-btn')) return;
+                fileInput.click();
+            });
+        }
+
+        if(contentPreview && contentInput) setupDragAndDrop(contentPreview, contentInput);
+        if(stylePreview && styleInput) setupDragAndDrop(stylePreview, styleInput);
+
+        // Preset grid variables
+        const contentPresetInput = document.getElementById('contentPresetInput');
+        const stylePresetInput = document.getElementById('stylePresetInput');
+
+        // Clear preset selection when file is chosen or dropped
+        contentInput.addEventListener('change', () => clearPresetSelection('content'));
+        styleInput.addEventListener('change', () => clearPresetSelection('style'));
+
+        function clearPresetSelection(type) {
+            const grid = document.getElementById(`${type}PresetGrid`);
+            if (grid) {
+                grid.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active-preset'));
+            }
+            const hiddenInput = document.getElementById(`${type}PresetInput`);
+            if (hiddenInput) {
+                hiddenInput.value = '';
+            }
+        }
+
+        // Bind preset click handlers
+        function bindPresetClicks(gridId, hiddenInputId, previewId, fileInput, type) {
+            const grid = document.getElementById(gridId);
+            const hiddenInput = document.getElementById(hiddenInputId);
+            const preview = document.getElementById(previewId);
+            
+            if (!grid || !hiddenInput || !preview) return;
+            
+            grid.querySelectorAll('.preset-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    // Toggle active states
+                    grid.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active-preset'));
+                    card.classList.add('active-preset');
+                    
+                    // Set preset value
+                    const presetName = card.getAttribute('data-preset');
+                    hiddenInput.value = presetName;
+                    
+                    // Clear file input
+                    fileInput.value = '';
+                    
+                    // Update preview card image (presets are served via /examples/)
+                    const imgUrl = `/examples/${presetName}`;
+                    const imgs = preview.querySelectorAll('img');
+                    imgs.forEach(i => i.remove());
+                    const span = preview.querySelector('span');
+                    if (span) span.remove();
+                    
+                    const img = document.createElement('img');
+                    img.src = imgUrl;
+                    img.alt = "Preset Image";
+                    preview.appendChild(img);
+                    
+                    // Show clear button
+                    const clearBtn = document.getElementById(`${type}ClearBtn`);
+                    if (clearBtn) clearBtn.style.display = 'flex';
+                });
+            });
+        }
+
+        bindPresetClicks('contentPresetGrid', 'contentPresetInput', 'contentPreview', contentInput, 'content');
+        bindPresetClicks('stylePresetGrid', 'stylePresetInput', 'stylePreview', styleInput, 'style');
+
+        // Setup Clear Buttons Click Listeners
+        function setupClearAction(clearBtnId, fileInput, previewId, type, placeholderText) {
+            const btn = document.getElementById(clearBtnId);
+            if (!btn) return;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent opening file dialog
+                fileInput.value = '';
+                clearPresetSelection(type);
+                
+                const hiddenPath = document.getElementsByName(`${type}_path`)[0];
+                if (hiddenPath) hiddenPath.value = '';
+                
+                const preview = document.getElementById(previewId);
+                const imgs = preview.querySelectorAll('img');
+                imgs.forEach(i => i.remove());
+                
+                if (!preview.querySelector('span')) {
+                    const span = document.createElement('span');
+                    span.textContent = placeholderText;
+                    preview.appendChild(span);
+                }
+                
+                btn.style.display = 'none';
+            });
+        }
+
+        setupClearAction('contentClearBtn', contentInput, 'contentPreview', 'content', 'Select or drop a content image');
+        setupClearAction('styleClearBtn', styleInput, 'stylePreview', 'style', 'Select or drop a style image');
+
+        // Show clear buttons on load if images are already present
+        if (contentPreview && contentPreview.querySelector('img')) {
+            const btn = document.getElementById('contentClearBtn');
+            if (btn) btn.style.display = 'flex';
+        }
+        if (stylePreview && stylePreview.querySelector('img')) {
+            const btn = document.getElementById('styleClearBtn');
+            if (btn) btn.style.display = 'flex';
+        }
+
+        // Example flow row click handlers
+        document.querySelectorAll('.example-flow').forEach(row => {
+            row.addEventListener('click', () => {
+                const cPreset = row.getAttribute('data-content-preset');
+                const sPreset = row.getAttribute('data-style-preset');
+                
+                if (cPreset) {
+                    const card = document.querySelector(`#contentPresetGrid .preset-card[data-preset="${cPreset}"]`);
+                    if (card) card.click();
+                }
+                if (sPreset) {
+                    const card = document.querySelector(`#stylePresetGrid .preset-card[data-preset="${sPreset}"]`);
+                    if (card) card.click();
+                }
+                // Scroll to uploader form smoothly
+                const formAnchor = document.getElementById('uploadForm');
+                if (formAnchor) formAnchor.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // ONNX Model and Execution Mode Variables
+        let onnxSession = null;
+        const modeToggle = document.getElementById('modeToggle');
+        const modeServerLabel = document.getElementById('modeServerLabel');
+        const modeClientLabel = document.getElementById('modeClientLabel');
+
+        function updateModeLabels() {
+            if (modeToggle.checked) {
+                modeClientLabel.classList.add('mode-active');
+                modeClientLabel.classList.remove('text-muted');
+                modeServerLabel.classList.remove('mode-active');
+                modeServerLabel.classList.add('text-muted');
+            } else {
+                modeServerLabel.classList.add('mode-active');
+                modeServerLabel.classList.remove('text-muted');
+                modeClientLabel.classList.remove('mode-active');
+                modeClientLabel.classList.add('text-muted');
+            }
+        }
+
+        async function loadOnnxModel() {
+            if (onnxSession) return;
+            
+            const progressDiv = document.getElementById('onnxLoadingProgress');
+            const progressBar = document.getElementById('onnxProgressBar');
+            const progressPct = document.getElementById('onnxProgressPct');
+            
+            progressDiv.classList.remove('d-none');
+            progressBar.style.width = '0%';
+            progressPct.textContent = '0%';
+            
+            try {
+                // Set WASM paths to CDN to ensure browser can fetch WebAssembly binaries
+                ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.3/dist/';
+                
+                // Disable multi-threading to bypass SharedArrayBuffer / crossOriginIsolated browser security limitations
+                ort.env.wasm.numThreads = 1;
+                
+                // 1. Fetch the large weights file (.data) with progress tracking — keep in memory
+                const response = await fetch('/static/models/nst.onnx.data');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const contentLength = response.headers.get('content-length');
+                const totalBytes = contentLength ? parseInt(contentLength, 10) : 28000000;
+                
+                const reader = response.body.getReader();
+                const chunks = [];
+                let loadedBytes = 0;
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loadedBytes += value.length;
+                    
+                    const percentage = Math.round((loadedBytes / totalBytes) * 100);
+                    progressBar.style.width = `${percentage}%`;
+                    progressPct.textContent = `${percentage}%`;
+                }
+                
+                // Combine chunks into a single Uint8Array
+                const dataBuffer = new Uint8Array(loadedBytes);
+                let offset = 0;
+                for (const chunk of chunks) {
+                    dataBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
+                
+                progressBar.style.width = '100%';
+                progressPct.textContent = 'Initializing model...';
+                
+                // 2. Create ORT session using the model URL and passing externalData directly
+                onnxSession = await ort.InferenceSession.create('/static/models/nst.onnx', {
+                    externalData: [
+                        {
+                            path: 'nst.onnx.data',
+                            data: dataBuffer
+                        }
+                    ]
+                });
+                
+                progressPct.textContent = 'Ready';
+                setTimeout(() => {
+                    progressDiv.classList.add('d-none');
+                }, 1000);
+            } catch (err) {
+                console.error("Failed to load ONNX model:", err);
+                let errorMessage = "Unknown error";
+                if (err) {
+                    if (err.message) {
+                        errorMessage = err.message;
+                    } else {
+                        errorMessage = String(err);
+                    }
+                }
+                showError("Failed to initialize browser neural network: " + errorMessage);
+                progressDiv.classList.add('d-none');
+                modeToggle.checked = false;
+                updateModeLabels();
+            }
+        }
+
+        if (modeToggle) {
+            modeToggle.addEventListener('change', () => {
+                updateModeLabels();
+                if (modeToggle.checked) {
+                    loadOnnxModel();
+                }
+            });
+            updateModeLabels(); // init
+        }
+
+        // Also support clicking on labels to switch toggle
+        if (modeServerLabel) {
+            modeServerLabel.addEventListener('click', () => {
+                if (modeToggle.checked) {
+                    modeToggle.checked = false;
+                    updateModeLabels();
+                }
+            });
+        }
+        if (modeClientLabel) {
+            modeClientLabel.addEventListener('click', () => {
+                if (!modeToggle.checked) {
+                    modeToggle.checked = true;
+                    updateModeLabels();
+                    loadOnnxModel();
+                }
+            });
+        }
+
+        // Image Preprocessing Helper for ONNX
+        function preprocessImage(imgElement) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(imgElement, 0, 0, 512, 512);
+            
+            const imageData = ctx.getImageData(0, 0, 512, 512);
+            const data = imageData.data; // RGBA values
+            
+            // Create Float32Array of size 1 * 3 * 512 * 512
+            const floatData = new Float32Array(3 * 512 * 512);
+            
+            // Convert RGBA to NCHW format, normalizing [0, 255] to [0.0, 1.0]
+            for (let i = 0; i < 512 * 512; i++) {
+                floatData[i] = data[i * 4] / 255.0;                 // R
+                floatData[i + 512 * 512] = data[i * 4 + 1] / 255.0;   // G
+                floatData[i + 2 * 512 * 512] = data[i * 4 + 2] / 255.0; // B
+            }
+            
+            return new ort.Tensor('float32', floatData, [1, 3, 512, 512]);
+        }
+
+        // Output Postprocessing Helper for ONNX
+        function postprocessImage(outputTensor) {
+            const floatData = outputTensor.data;
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.createImageData(512, 512);
+            const data = imageData.data;
+            
+            for (let i = 0; i < 512 * 512; i++) {
+                let r = floatData[i];
+                let g = floatData[i + 512 * 512];
+                let b = floatData[i + 2 * 512 * 512];
+                
+                // Clamp to [0, 1] and scale to [0, 255]
+                data[i * 4] = Math.max(0, Math.min(1, r)) * 255;
+                data[i * 4 + 1] = Math.max(0, Math.min(1, g)) * 255;
+                data[i * 4 + 2] = Math.max(0, Math.min(1, b)) * 255;
+                data[i * 4 + 3] = 255; // Alpha
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            return canvas.toDataURL('image/jpeg');
+        }
+
+        // Slider comparison variables
+        const compSlider = document.getElementById('compSlider');
+        const compOverlay = document.getElementById('compOverlay');
+        const compHandle = document.getElementById('compHandle');
+        const compBeforeImg = document.getElementById('compBeforeImage');
+        const resultImgForOverlay = compOverlay ? compOverlay.querySelector('.comparison-image') : null;
+
+        function initComparisonSlider() {
+            if (!compSlider || !compOverlay || !compHandle || !compBeforeImg || !resultImgForOverlay) return;
+
+            function alignImages() {
+                const width = compSlider.clientWidth;
+                compBeforeImg.style.width = width + 'px';
+                resultImgForOverlay.style.width = width + 'px';
+            }
+
+            window.removeEventListener('resize', alignImages);
+            window.addEventListener('resize', alignImages);
+            alignImages();
+
+            let isDragging = false;
+
+            function slide(x) {
+                const rect = compSlider.getBoundingClientRect();
+                let position = ((x - rect.left) / rect.width) * 100;
+                position = Math.max(0, Math.min(100, position));
+                compOverlay.style.width = position + '%';
+                compHandle.style.left = position + '%';
+            }
+
+            // Mouse events
+            compSlider.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                slide(e.clientX);
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                slide(e.clientX);
+            });
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            // Touch events
+            compSlider.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                slide(e.touches[0].clientX);
+            });
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                slide(e.touches[0].clientX);
+            });
+            window.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            // Delay execution to guarantee container layout sizing
+            setTimeout(alignImages, 200);
+        }
+
+        // Fetch API form submit logic
+        const form = document.getElementById('uploadForm');
+        const loader = document.getElementById('loader');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMsg = document.getElementById('errorMsg');
+        const resultSection = document.getElementById('resultSection');
+        const resultImage = document.getElementById('resultImage');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        if (form) {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Hide existing errors
+                errorAlert.classList.add('d-none');
+                
+                const isClientSide = modeToggle.checked;
+                
+                const contentHasFile = contentInput.files && contentInput.files.length > 0;
+                const styleHasFile = styleInput.files && styleInput.files.length > 0;
+                const contentPathVal = document.getElementsByName('content_path')[0]?.value;
+                const stylePathVal = document.getElementsByName('style_path')[0]?.value;
+                const contentPresetVal = contentPresetInput.value;
+                const stylePresetVal = stylePresetInput.value;
+
+                if (!contentHasFile && !contentPathVal && !contentPresetVal) {
+                    showError("Please select or upload a Content Image.");
+                    return;
+                }
+                if (!styleHasFile && !stylePathVal && !stylePresetVal) {
+                    showError("Please select or upload a Style Image.");
+                    return;
+                }
+
+                // Show loader
+                loader.classList.add('active');
+                
+                // Track latency
+                const startTime = performance.now();
+                const alphaVal = parseFloat(range.value);
+
+                if (isClientSide) {
+                    // Client-Side ONNX Web Execution
+                    try {
+                        // Ensure model is loaded
+                        if (!onnxSession) {
+                            await loadOnnxModel();
+                        }
+                        
+                        const contentImg = contentPreview.querySelector('img');
+                        const styleImg = stylePreview.querySelector('img');
+                        
+                        if (!contentImg || !styleImg) {
+                            throw new Error("Content or Style image preview is missing. Please re-select.");
+                        }
+                        
+                        // Wait for images to load if they are not complete
+                        await Promise.all([
+                            new Promise((resolve) => { if (contentImg.complete) resolve(); else contentImg.onload = resolve; }),
+                            new Promise((resolve) => { if (styleImg.complete) resolve(); else styleImg.onload = resolve; })
+                        ]);
+
+                        // Preprocess
+                        const contentTensor = preprocessImage(contentImg);
+                        const styleTensor = preprocessImage(styleImg);
+                        const alphaTensor = new ort.Tensor('float32', new Float32Array([alphaVal]), [1]);
+                        
+                        // Run inference
+                        const feeds = {
+                            content: contentTensor,
+                            style: styleTensor,
+                            alpha: alphaTensor
+                        };
+                        
+                        const results = await onnxSession.run(feeds);
+                        const outputTensor = results.output;
+                        
+                        // Postprocess to Data URL
+                        const resultDataUrl = postprocessImage(outputTensor);
+                        
+                        loader.classList.remove('active');
+                        
+                        const endTime = performance.now();
+                        const durationMs = Math.round(endTime - startTime);
+
+                        // Update dashboard stats
+                        document.getElementById('statMode').textContent = "ONNX Web";
+                        document.getElementById('statAlpha').textContent = alphaVal.toFixed(1);
+                        document.getElementById('statLatency').textContent = `${durationMs} ms`;
+
+                        // Fetch Content Image Preview as before image in slider
+                        compBeforeImg.src = contentImg.src;
+
+                        // Show result
+                        resultImage.src = resultDataUrl;
+                        downloadBtn.href = resultDataUrl;
+                        resultSection.classList.remove('d-none');
+                        
+                        // Scroll to results
+                        resultSection.scrollIntoView({ behavior: 'smooth' });
+                        
+                        // Init Comparison Slider
+                        initComparisonSlider();
+                        
+                    } catch (err) {
+                        loader.classList.remove('active');
+                        showError("Client-side style transfer error: " + err.message);
+                        console.error(err);
+                    }
+                } else {
+                    // Server-Side (PyTorch) execution
+                    const formData = new FormData(form);
+                    
+                    fetch('/api/transfer', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                    .then(result => {
+                        loader.classList.remove('active');
+                        if (result.status === 200 && result.body.success) {
+                            const endTime = performance.now();
+                            const durationMs = Math.round(endTime - startTime);
+
+                            // Update dashboard stats
+                            document.getElementById('statMode').textContent = "PyTorch Server";
+                            document.getElementById('statAlpha').textContent = alphaVal.toFixed(1);
+                            document.getElementById('statLatency').textContent = `${durationMs} ms`;
+
+                            // Fetch Content Image Preview as before image in slider
+                            const contentImg = contentPreview.querySelector('img');
+                            if (contentImg) {
+                                compBeforeImg.src = contentImg.src;
+                            }
+
+                            // Success! Update result section
+                            resultImage.src = result.body.result_url;
+                            downloadBtn.href = result.body.result_url;
+                            resultSection.classList.remove('d-none');
+                            
+                            // Scroll to results smoothly
+                            resultSection.scrollIntoView({ behavior: 'smooth' });
+
+                            // Init Comparison Slider
+                            initComparisonSlider();
+                        } else {
+                            showError(result.body.error || "An unknown error occurred during style transfer.");
+                        }
+                    })
+                    .catch(err => {
+                        loader.classList.remove('active');
+                        showError("Network error or server connection failed.");
+                        console.error(err);
+                    });
+                }
+            });
+        }
+
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorAlert.classList.remove('d-none');
+            errorAlert.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+</body>
+</html>
+ 
