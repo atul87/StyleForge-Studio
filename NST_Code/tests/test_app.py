@@ -12,17 +12,17 @@ parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-from app import app
+from app import app as flask_app
 
 class TestApp(unittest.TestCase):
     def setUp(self):
         # Configure app for testing
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['UPLOAD_FOLDER'] = os.path.join(parent_dir, 'static', 'test_uploads')
-        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+        flask_app.config['TESTING'] = True
+        flask_app.config['WTF_CSRF_ENABLED'] = False
+        flask_app.config['UPLOAD_FOLDER'] = os.path.join(parent_dir, 'static', 'test_uploads')
+        os.makedirs(flask_app.config['UPLOAD_FOLDER'], exist_ok=True)
         
-        self.client = app.test_client()
+        self.client = flask_app.test_client()
 
     def tearDown(self):
         # Clean up test uploads directory
