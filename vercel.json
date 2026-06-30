@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "NST_Code/app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "NST_Code/app.py"
+    }
+  ]
+}
