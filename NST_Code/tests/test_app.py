@@ -26,8 +26,8 @@ class TestApp(unittest.TestCase):
 
     def tearDown(self):
         # Clean up test uploads directory
-        if os.path.exists(app.config['UPLOAD_FOLDER']):
-            shutil.rmtree(app.config['UPLOAD_FOLDER'])
+        if os.path.exists(flask_app.config['UPLOAD_FOLDER']):
+            shutil.rmtree(flask_app.config['UPLOAD_FOLDER'])
 
     def test_index_get(self):
         response = self.client.get('/')
@@ -60,7 +60,7 @@ class TestApp(unittest.TestCase):
 
         # Verify the created result file exists
         result_filename = os.path.basename(data['result_url'])
-        result_path = os.path.join(app.config['UPLOAD_FOLDER'], result_filename)
+        result_path = os.path.join(flask_app.config['UPLOAD_FOLDER'], result_filename)
         self.assertTrue(os.path.isfile(result_path))
 
     def test_api_transfer_file_upload_success(self):
